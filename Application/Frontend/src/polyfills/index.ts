@@ -1,5 +1,3 @@
-//import environment from 'Environment';
-
 // IE9, IE10 and IE11 requires all of the following polyfills
 import 'core-js/features/array';
 import 'core-js/features/date';

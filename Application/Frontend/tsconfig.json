@@ -2,7 +2,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "sourceMap": true,
-    "baseUrl": ".",
+    "baseUrl": "src",
     "module": "esnext",
     "target": "esnext",
     "jsx": "preserve",
@@ -31,7 +31,7 @@
   },
   "include": [
     "./**/*",
-    "custom.d.ts"
+    "src/custom.d.ts"
   ],
   "exclude": [
     "node_modules",

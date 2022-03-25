@@ -1,5 +1,6 @@
 # Custom application-based exclusions
 
+Application/Frontend/dist
 Application/wwwroot/
 
 # Visual Code files

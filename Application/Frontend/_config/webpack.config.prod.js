@@ -1,9 +1,7 @@
 const path = require('path');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 
 const paths = require('./paths');
 
@@ -16,36 +14,6 @@ module.exports = (env, argv) => {
     // Production mode
     return {
         entry: path.resolve(paths.FRONTEND_DIR, 'index.js'),
-        module: {
-            rules: [
-                {
-                    test: /\.[jt]sx?$/,
-                    exclude: /node_modules\/(?!rxios)/,     // Includes rxios
-                    use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [
-                                    '@babel/preset-env',
-                                    { 
-                                        modules: false,
-                                    },
-                                ],
-                                '@babel/preset-react',
-                                '@babel/typescript',
-                            ],
-                            plugins: [
-                                'babel-plugin-react-scoped-css',    // For react-scoped-css
-                                '@babel/plugin-proposal-class-properties',
-
-                                // support dynamic import syntax, but leave it unchanged
-                                '@babel/plugin-syntax-dynamic-import',
-                            ],
-                        }
-                    }
-                },
-            ]
-        },
         plugins: [
             new MiniCssExtractPlugin({
                 filename: '[name].css',
