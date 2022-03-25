@@ -1,0 +1,127 @@
+/* All global styles should be defined here */
+
+// @import "./fonts.scss";
+
+@import '~purecss/build/base-min.css';
+@import '~purecss/build/pure-min.css';
+@import '~purecss/build/grids-responsive-min.css';
+
+html, body {
+    width: 100%;
+    @include responsive-multi-setter((
+        font-size: (17px, 18px, 20px)
+    ), 3);
+}
+
+body {
+    font-family: 'Roboto';
+    margin: 0;
+    overflow-y: auto;
+}
+
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+    font-family: 'Roboto';
+}
+.pure-g {
+    margin: 0 -12px;
+}
+[class *= "pure-u"] {
+    box-sizing: border-box;
+    padding: 12px;
+}
+
+p {
+    font-size: 0.7rem;
+}
+
+hr {
+    border-bottom: solid 0.5px #BEBEBE;
+    border-top: none;
+}
+
+// Customizes common link behavior
+a.app-link {
+    color: $secondary-main;
+    text-decoration: none;
+    &:focus, &:hover {
+        outline: none;
+        text-decoration: underline;
+    }
+}
+
+// For labeling items without visual text for screen readers
+.hidden-label {
+    opacity: 0;
+    overflow: hidden;
+    width: 0;
+}
+
+// Used to handle major desktop/mobile differences
+.desktop {
+    // Hides content smaller than md screens 
+    @media only screen and (max-width: 959px) {
+        display: none !important;
+    }
+}
+.mobile {
+    // Hides content larger than sm screens 
+    @media only screen and (min-width: 960px) {
+        display: none !important;
+    }
+}
+
+// Used to display elements only in certain screen sizes
+.conditional-display {
+    display: none;
+    &.xs:not([class *= "pure-u"]) {
+        @media only screen and (max-width: 599px) {
+            display: block;
+        }
+    }
+    &.xs[class *= "pure-u"] {
+        @media only screen and (max-width: 35.4em) {
+            display: block;
+        }
+    }
+    &.sm:not([class *= "pure-u"]) {
+        @media only screen and (min-width: 600px) and (max-width: 959px) {
+            display: block;
+        }
+    }
+    &.sm[class *= "pure-u"] {
+        @media only screen and (min-width: 35.5em) and (max-width: 47.9em) {
+            display: block;
+        }
+    }
+    &.md:not([class *= "pure-u"]) {
+        @media only screen and (min-width: 960px) and (max-width: 1279px) {
+            display: block;
+        }
+    }
+    &.md[class *= "pure-u"] {
+        @media only screen and (min-width: 48em) and (max-width: 63.9em) {
+            display: block;
+        }
+    }
+    &.lg:not([class *= "pure-u"]) {
+        @media only screen and (min-width: 1280px) and (max-width: 1919px) {
+            display: block;
+        }
+    }
+    &.lg[class *= "pure-u"] {
+        @media only screen and (min-width: 64em) and (max-width: 79.9em) {
+            display: block;
+        }
+    }
+    &.xl:not([class *= "pure-u"]) {
+        @media only screen and (min-width: 1920px) {
+            display: block;
+        }
+    }
+    &.xl[class *= "pure-u"] {
+        @media only screen and (min-width: 80em) {
+            display: block;
+        }
+    }
+}

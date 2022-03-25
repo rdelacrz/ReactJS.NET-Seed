@@ -1,0 +1,73 @@
+{
+  "name": "seed-project",
+  "version": "1.0.0",
+  "description": "Seed project to serve as a template for future projects.",
+  "sideEffects": [
+    "polyfills/**",
+    "*.scss",
+    "*.css"
+  ],
+  "scripts": {
+    "local": "webpack serve --hot --mode=development --config=_config/webpack.config.js",
+    "build": "webpack --mode=production --config=_config/webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://INOVASNET@dev.azure.com/INOVASNET/INOVAS%20React%20Seed/_git/INOVAS%20React%20Seed"
+  },
+  "keywords": [
+    "React",
+    "SSR",
+    "ReactJS.Net",
+    "MVC"
+  ],
+  "author": "INOVAS",
+  "license": "ISC",
+  "dependencies": {
+    "classlist-polyfill": "^1.2.0",
+    "core-js": "^3.21.1",
+    "nodelist-foreach-polyfill": "^1.2.0",
+    "promise-polyfill": "^8.2.3",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.2.2",
+    "react-router-dom": "^6.2.2",
+    "reflect-metadata": "^0.1.13",
+    "regenerator-runtime": "^0.13.9"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.17.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.4",
+    "@svgr/webpack": "^6.2.1",
+    "@types/node": "^17.0.23",
+    "@types/react": "^17.0.43",
+    "@types/react-dom": "^17.0.14",
+    "autoprefixer": "^10.4.4",
+    "babel-loader": "^8.2.4",
+    "babel-plugin-react-scoped-css": "^1.1.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "css-loader": "^6.7.1",
+    "css-minimizer-webpack-plugin": "^3.4.1",
+    "esbuild-loader": "^2.18.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "mini-css-extract-plugin": "^2.6.0",
+    "path": "^0.12.7",
+    "postcss-loader": "^6.2.1",
+    "postcss-scss": "^4.0.3",
+    "react-refresh": "^0.11.0",
+    "sass": "^1.49.9",
+    "sass-loader": "^12.6.0",
+    "sass-resources-loader": "^2.2.4",
+    "scoped-css-loader": "^1.0.0",
+    "style-loader": "^3.3.1",
+    "terser-webpack-plugin": "^5.3.1",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "tslint": "^6.1.3",
+    "typescript": "^4.6.3",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
+    "webpack-manifest-plugin": "^5.0.0"
+  }
+}

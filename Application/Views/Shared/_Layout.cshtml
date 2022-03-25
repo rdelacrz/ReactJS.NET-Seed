@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>E-Recognition</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="icon" href="~/wwwroot/favicon.ico" type="image/vnd.microsoft.icon">
+    @Html.ReactGetStylePaths()
+</head>
+<body>
+    @RenderBody()
+
+    <!-- Render the component server-side, passing initial props -->
+    @Html.React("Components.App", new { location = @HttpContext.Current.Request.RawUrl })
+
+    <!-- Render the code to initialise the component -->
+    @Html.ReactGetScriptPaths()
+    @Html.ReactInitJavaScript()
+</body>
+</html>

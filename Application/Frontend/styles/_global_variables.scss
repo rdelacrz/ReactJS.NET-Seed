@@ -1,0 +1,29 @@
+/* All global variables should be declared here */
+
+$page_content_min_height: calc(100vh - 185px);
+$container-side-padding: 30px;
+
+// Alert colors
+$primary-main: #315357;
+$secondary-main: #325DFB;
+$success-main: #307405;
+$success-secondary: #CEF2CB;
+$warning-main: #8E5E02;
+$warning-secondary: #FCEFC3;
+$error-main: #B51313;
+$error-secondary: #F5D1D1;
+$deleted-main: #464646;
+$deleted-secondary: #E0DFDF;
+$grey-main: #646565;
+$tab-height: 21px;
+
+// Makes Material-UI variables accessible to Javascript
+:export {
+    primaryMain: $primary-main;
+    secondaryMain: $secondary-main;
+    errorMain: $error-main;
+    warningMain: $warning-main;
+    successMain: $success-main;
+    greyMain: $grey-main;
+    tabHeight: $tab-height;
+}

@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "baseUrl": ".",
+    "module": "esnext",
+    "target": "esnext",
+    "jsx": "preserve",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": true,
+    "noEmit": true,   // Used when tsc is used only for type checking, and not for compilation
+    "lib": [
+      "es6",
+      "es2017",
+      "dom",
+      "dom.iterable"
+    ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "~~/*": ["./*"]
+    }
+  },
+  "include": [
+    "./**/*",
+    "custom.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+  ]
+}

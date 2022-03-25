@@ -1,0 +1,123 @@
+/* All reusable mixins should be defined here */
+
+@mixin gradient($from, $to) {
+    background: -webkit-gradient(linear, left top, left bottom, from($from), to($to));
+    background: -moz-linear-gradient(top, $from, $to);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#{$from}', endColorstr='#{$to}');
+}
+
+@mixin background-banner($height) {
+    height: $height;
+    width: 100%;
+    background-color: #444;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+@mixin truncate-text($width) {
+    width: $width;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@mixin flex1() {
+    flex: 1;
+    @include ie-styles() {
+        flex: 1 0 0;
+    }
+}
+
+@mixin flex-page-layout-container() {
+    display: flex;
+    flex-direction: column;
+    @include flex1();
+}
+
+/* Mixins related to browser-specific styles */
+
+@mixin chrome-styles() {
+    @media only screen and (-webkit-min-device-pixel-ratio:0) {
+        @content;
+    }
+}
+
+@mixin ie-styles {  /* IE10 and IE11 */
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        @content;
+    }
+}
+
+
+/* Mixins related to Material UI breakpoints */
+
+@mixin xs-layout() {
+    @media only screen and (max-width: 599px) {
+        @content;
+    }
+}
+
+@mixin sm-layout() {
+    @media only screen and (min-width: 600px) {
+        @content;
+    }
+}
+
+@mixin md-layout() {
+    @media only screen and (min-width: 960px) {
+        @content;
+    }
+}
+
+@mixin lg-layout() {
+    @media only screen and (min-width: 1280px) {
+        @content;
+    }
+}
+
+@mixin xl-layout() {
+    @media only screen and (min-width: 1920px) {
+        @content;
+    }
+}
+
+/* Responsive setters for property values */
+
+/* Structure of $property-map: { $property-name: (default, sm, md, lg, xl) } */
+@mixin responsive-multi-setter($property-map, $limit: 5) {
+    @for $i from 1 through 5 {
+        @if ($i == 1 and $i <= $limit) {
+            @include _responsive-multi-setter-helper($property-map, $i);
+        }
+        @if ($i == 2 and $i <= $limit) {
+            @include sm-layout() {
+                @include _responsive-multi-setter-helper($property-map, $i);
+            }
+        }
+        @if ($i == 3 and $i <= $limit) {
+            @include md-layout() {
+                @include _responsive-multi-setter-helper($property-map, $i);
+            }
+        }
+        @if ($i == 4 and $i <= $limit) {
+            @include lg-layout() {
+                @include _responsive-multi-setter-helper($property-map, $i);
+            }
+        }
+        @if ($i == 5 and $i <= $limit) {
+            @include xl-layout() {
+                @include _responsive-multi-setter-helper($property-map, $i);
+            }
+        }
+    }
+}
+
+@mixin _responsive-multi-setter-helper($property-map, $value-index) {
+    @each $property-name, $property-values in $property-map {
+        $value: nth($property-values, $value-index);
+        @if ($value) {
+            #{$property-name}: $value;
+        }
+    }
+}
