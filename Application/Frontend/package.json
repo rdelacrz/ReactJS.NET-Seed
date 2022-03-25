@@ -2,10 +2,6 @@
   "name": "seed-project",
   "version": "1.0.0",
   "description": "Seed project to serve as a template for future projects.",
-  "sideEffects": [
-    "*.scss",
-    "*.css"
-  ],
   "scripts": {
     "local": "webpack serve --hot --mode=development --config=_config/webpack.config.js",
     "dev": "node _config/esbuild.config.js",
@@ -48,6 +44,7 @@
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.1",
     "esbuild": "^0.14.27",
+    "esbuild-dev-server": "^0.3.0",
     "esbuild-loader": "^2.18.0",
     "esbuild-sass-plugin": "^2.2.5",
     "file-loader": "^6.2.0",

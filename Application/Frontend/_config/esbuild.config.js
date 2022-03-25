@@ -41,7 +41,8 @@ build({
             },
             async transform(source) {
                 const { css } = await postcss([autoprefixer]).process(
-                    source
+                    source,
+                    { from: false }
                 );
                 return css;
             },
