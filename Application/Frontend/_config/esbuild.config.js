@@ -60,6 +60,8 @@ esbuild.build({
 //  Serves newly-build app on esbuild dev server via proxy
 /////////////////////////////////////////////////////////////////
 esbuild.serve({ servedir: paths.DIST_DIR }, {}).then(({ host, port }) => {
+    console.log(`Serving app on: \u001b[36mhttp://localhost:${DEV_PORT}\u001b[0m`);
+
     const apiProxy = createProxyServer();
     http.createServer((req, res) => {
         const { url, method, headers } = req;
