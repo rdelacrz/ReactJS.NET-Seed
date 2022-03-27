@@ -4,7 +4,7 @@ import './styles.scss';
 
 export const HomePage: FunctionComponent<{}> = () => {
   return (
-    <div>Home Pages</div>
+    <div>Home Page</div>
   );
 }
 
