@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
 
     // Production mode
     return {
-        entry: path.resolve(paths.FRONTEND_DIR, 'index.js'),
+        entry: path.resolve(paths.SRC_DIR, 'index.js'),
         plugins: [
             new MiniCssExtractPlugin({
                 filename: '[name].css',

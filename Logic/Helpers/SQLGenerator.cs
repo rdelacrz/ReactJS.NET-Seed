@@ -105,12 +105,15 @@ namespace Logic.Helpers
 
         /// <summary>Generates SQL string responsible for ordering a SQL query's results.</summary>
         /// <param name="orderBy">Column names to order a query's results by, in list order.</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>ORDER BY SQL string.</returns>
-        private static string GenerateOrderBySQL(IEnumerable<string> orderBy, bool orderByASC = true)
+        private static string GenerateOrderBySQL(IEnumerable<string> orderBy, IEnumerable<bool> orderByASC = null)
         {
-            string orderByASCStr = orderByASC ? " ASC" : " DESC";
-            return "ORDER BY " + string.Join(",", orderBy.Select(e => e + orderByASCStr));
+            var orderByASCStrs = orderByASC == null 
+                ? orderBy.Select(_ => "ASC").ToList() 
+                : orderByASC.Select(asc => asc ? "ASC" : "DESC").ToList();
+            return "ORDER BY " + string.Join(",", orderBy.Select((e, i) => e + orderByASCStrs[i]));
         }
 
         #endregion
@@ -119,9 +122,11 @@ namespace Logic.Helpers
         /// <param name="table">Name of database table.</param>
         /// <param name="joinSQL">SQL string containing JOIN clauses, if any (null by default).</param>
         /// <param name="orderBy">Column names to order a query's results by, in list order.</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>SQL for "get-all" query.</returns>
-        public static string GenerateGetAllSQL(string table, string joinSQL = null, IEnumerable<string> orderBy = null, bool orderByASC = true)
+        public static string GenerateGetAllSQL(string table, string joinSQL = null, IEnumerable<string> orderBy = null,
+            IEnumerable<bool> orderByASC = null)
         {
             StringBuilder sql = new StringBuilder();
 
@@ -147,12 +152,13 @@ namespace Logic.Helpers
         /// <param name="topItems">Top number of items for SELECT statement (if any).</param>
         /// <param name="joinSQL">SQL string containing JOIN clauses, if any (null by default).</param>
         /// <param name="orderBy">Column names to order a query's results by, in list order.</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <param name="listParameters">Set of parameters that are mapped to lists (if any).</param>
         /// <returns>SQL for "get" query.</returns>
         public static string GenerateGetSQL(string table, string selectParam = "*",
             IDictionary<string, string> parameters = null, bool distinct = false, int? topItems = null, string joinSQL = null,
-            IEnumerable<string> orderBy = null, bool orderByASC = true, IEnumerable<string> listParameters = null)
+            IEnumerable<string> orderBy = null, IEnumerable<bool> orderByASC = null, IEnumerable<string> listParameters = null)
         {
             // Generates basic SELECT statement of query
             StringBuilder sql = new StringBuilder("SELECT ");

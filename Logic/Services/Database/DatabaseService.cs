@@ -153,9 +153,11 @@ namespace Logic.Services
         /// <summary>Gets all data of the given model type from the given table.</summary>
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="orderByProperties">Model properties to order a query's results by, in list order (may be null).</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>All model objects with data queried from the database table.</returns>
-        public async Task<IEnumerable<M>> GetAll<M>(IEnumerable<string> orderByProperties = null, bool orderByASC = true) where M : IModel
+        public async Task<IEnumerable<M>> GetAll<M>(IEnumerable<string> orderByProperties = null, 
+            IEnumerable<bool> orderByASC = null) where M : IModel
         {
             // Transforms the order by properties list into an order by columns list
             IEnumerable<string> orderByColumns = null;
@@ -177,10 +179,11 @@ namespace Logic.Services
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="parameters">Parameters used to filter results for a single item.</param>
         /// <param name="orderByProperties">Determines ordering of items from which to retrieve first item.</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>Model object with data queried from the database table.</returns>
         public async Task<M> GetItem<M>(object parameters, IEnumerable<string> orderByProperties = null,
-            bool orderByASC = true) where M : IModel
+            IEnumerable<bool> orderByASC = null) where M : IModel
         {
             // Initializes the column => property mappings
             Dictionary<string, string> mapping = GetParameterMappings<M>(parameters, out HashSet<string> listParameters);
@@ -202,11 +205,12 @@ namespace Logic.Services
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="parameters">Parameters used to filter results for a given set of items (can be null).</param>
         /// <param name="orderByProperties">Model properties to order a query's results by, in list order (may be null).</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <param name="topItems">Top number of items for SELECT statement (if any).</param>
         /// <returns>List of model objects with data queried from the database table.</returns>
         public async Task<IEnumerable<M>> GetItems<M>(object parameters = null, IEnumerable<string> orderByProperties = null,
-            bool orderByASC = true, int? topItems = null) where M : IModel
+            IEnumerable<bool> orderByASC = null, int? topItems = null) where M : IModel
         {
             if (parameters == null)
                 parameters = new Dictionary<string, object>();

@@ -18,9 +18,10 @@ namespace Logic.Services
         /// <summary>Gets all data of the given model type from the given table.</summary>
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="orderByProperties">Model properties to order a query's results by, in list order (may be null).</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>All model objects with data queried from the database table.</returns>
-        Task<IEnumerable<M>> GetAll<M>(IEnumerable<string> orderByProperties = null, bool orderByASC = true) where M : IModel;
+        Task<IEnumerable<M>> GetAll<M>(IEnumerable<string> orderByProperties = null, IEnumerable<bool> orderByASC = null) where M : IModel;
 
         /// <summary>
         /// Gets a single item of the given model type based on the parameters used to filter
@@ -29,9 +30,10 @@ namespace Logic.Services
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="parameters">Parameters used to filter results for a single item.</param>
         /// <param name="orderByProperties">Determines ordering of items from which to retrieve first item.</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>Model object with data queried from the database table.</returns>
-        Task<M> GetItem<M>(object parameters, IEnumerable<string> orderByProperties = null, bool orderByASC = true) where M : IModel;
+        Task<M> GetItem<M>(object parameters, IEnumerable<string> orderByProperties = null, IEnumerable<bool> orderByASC = null) where M : IModel;
 
         /// <summary>
         /// Gets items of the given model type based on the parameters used to filter the results 
@@ -40,11 +42,12 @@ namespace Logic.Services
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="parameters">Parameters used to filter results for a given set of items (can be null).</param>
         /// <param name="orderByProperties">Model properties to order a query's results by, in list order (may be null).</param>
-        /// <param name="orderByASC">True if ORDER BY ascending, false if ORDER BY descending.</param>
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <param name="topItems">Top number of items for SELECT statement (if any).</param>
         /// <returns>List of model objects with data queried from the database table.</returns>
         Task<IEnumerable<M>> GetItems<M>(object parameters = null, IEnumerable<string> orderByProperties = null,
-            bool orderByASC = true, int? topItems = null) where M : IModel;
+            IEnumerable<bool> orderByASC = null, int? topItems = null) where M : IModel;
 
         /// <summary>
         /// Gets items of the given MResult model, which is the result of transforming the SQL query results using the transform 

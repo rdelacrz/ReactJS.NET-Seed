@@ -71,7 +71,7 @@ const sharedConfig = (env, argv) => {
                         {
                             loader: 'sass-resources-loader',
                             options: {
-                                resources: require(path.resolve(paths.FRONTEND_DIR, 'styles/references.js')),
+                                resources: require(path.resolve(paths.SRC_DIR, 'styles/references.js')),
                             },
                         },
                     ]

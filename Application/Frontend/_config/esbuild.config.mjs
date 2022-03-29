@@ -1,12 +1,13 @@
-const autoprefixer = require('autoprefixer');
-const { spawn } = require('child_process');
-const esbuild = require('esbuild');
-const { sassPlugin } = require('esbuild-sass-plugin');
-const { copyFileSync, existsSync, mkdirSync, readFileSync } = require('fs');
-const http = require('http');
-const { createProxyServer } = require('http-proxy');
-const postcss = require('postcss');
-const paths = require('./paths');
+import autoprefixer from 'autoprefixer';
+import { spawn } from 'child_process';
+import esbuild from 'esbuild';
+import envPlugin from '@chialab/esbuild-plugin-env';
+import { sassPlugin } from 'esbuild-sass-plugin';
+import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import http from 'http';
+import httpProxy from 'http-proxy';
+import postcss from 'postcss';
+import paths from './paths.js';
 
 const globalVarsSCSS = readFileSync(paths.STYLES_GLOBAL_VARS_FILE, 'utf-8');
 const mixinsSCSS = readFileSync(paths.STYLES_MIXINS_FILE, 'utf-8');
@@ -39,6 +40,7 @@ esbuild.build({
         },
     },
     plugins: [
+        envPlugin(),
         sassPlugin({
             precompile(source, pathname) {
                 const precompileSCSS = globalVarsSCSS + '\n' + mixinsSCSS;
@@ -62,7 +64,7 @@ esbuild.build({
 esbuild.serve({ servedir: paths.DIST_DIR }, {}).then(({ host, port }) => {
     console.log(`Serving app on: \u001b[36mhttp://localhost:${DEV_PORT}\u001b[0m`);
 
-    const apiProxy = createProxyServer();
+    const apiProxy = httpProxy.createProxyServer();
     http.createServer((req, res) => {
         const { url, method, headers } = req;
 
