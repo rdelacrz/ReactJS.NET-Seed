@@ -155,16 +155,19 @@ namespace Logic.Services
         /// <param name="orderByProperties">Model properties to order a query's results by, in list order (may be null).</param>
         /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
         /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
+        /// <param name="selectParameters">List of parameters to use (if null, uses them all by default).</param>
         /// <returns>All model objects with data queried from the database table.</returns>
         public async Task<IEnumerable<M>> GetAll<M>(IEnumerable<string> orderByProperties = null, 
-            IEnumerable<bool> orderByASC = null) where M : IModel
+            IEnumerable<bool> orderByASC = null, IEnumerable<string> selectParameters = null) where M : IModel
         {
             // Transforms the order by properties list into an order by columns list
             IEnumerable<string> orderByColumns = null;
             if (orderByProperties != null)
                 orderByColumns = orderByProperties.Select(e => propertyToColumnMap[typeof(M)][e]);
 
-            string sql = SQLGenerator.GenerateGetAllSQL(tableMap[typeof(M)], orderBy: orderByColumns, orderByASC: orderByASC);
+            string selectColumns = GetSelectColumns(typeof(M), selectParameters);
+
+            string sql = SQLGenerator.GenerateGetAllSQL(tableMap[typeof(M)], selectColumns, orderBy: orderByColumns, orderByASC: orderByASC);
 
             using (IDbConnection db = new SqlConnection(dbConnectionString))
             {
@@ -179,17 +182,21 @@ namespace Logic.Services
         /// <typeparam name="M">Type of model used as the basis for the SQL string.</typeparam>
         /// <param name="parameters">Parameters used to filter results for a single item.</param>
         /// <param name="orderByProperties">Determines ordering of items from which to retrieve first item.</param>
-        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
+        /// <param name="orderByASC">List of boolean values corresponding to each orderBy value.
         /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
+        /// <param name="selectParameters">List of parameters to use (if null, uses them all by default).</param>
         /// <returns>Model object with data queried from the database table.</returns>
         public async Task<M> GetItem<M>(object parameters, IEnumerable<string> orderByProperties = null,
-            IEnumerable<bool> orderByASC = null) where M : IModel
+            IEnumerable<bool> orderByASC = null, IEnumerable<string> selectParameters = null) where M : IModel
         {
             // Initializes the column => property mappings
             Dictionary<string, string> mapping = GetParameterMappings<M>(parameters, out HashSet<string> listParameters);
 
+            // Determines select parameters if they are passed
+            string selectColumns = GetSelectColumns(typeof(M), selectParameters);
+
             // Performs query
-            string sql = SQLGenerator.GenerateGetSQL(tableMap[typeof(M)], parameters: mapping, topItems: 1, listParameters: listParameters,
+            string sql = SQLGenerator.GenerateGetSQL(tableMap[typeof(M)], selectColumns, mapping, topItems: 1, listParameters: listParameters,
                 orderBy: orderByProperties, orderByASC: orderByASC);
 
             using (IDbConnection db = new SqlConnection(dbConnectionString))
@@ -208,9 +215,10 @@ namespace Logic.Services
         /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
         /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <param name="topItems">Top number of items for SELECT statement (if any).</param>
+        /// <param name="selectParameters">List of parameters to use (if null, uses them all by default).</param>
         /// <returns>List of model objects with data queried from the database table.</returns>
         public async Task<IEnumerable<M>> GetItems<M>(object parameters = null, IEnumerable<string> orderByProperties = null,
-            IEnumerable<bool> orderByASC = null, int? topItems = null) where M : IModel
+            IEnumerable<bool> orderByASC = null, int? topItems = null, IEnumerable<string> selectParameters = null) where M : IModel
         {
             if (parameters == null)
                 parameters = new Dictionary<string, object>();
@@ -219,8 +227,7 @@ namespace Logic.Services
             Dictionary<string, string> mapping = GetParameterMappings<M>(parameters, out HashSet<string> listParameters);
 
             // Gets column values of given model type only
-            string tableName = tableMap[typeof(M)];
-            string selectColumns = string.Join(", ", propertyToColumnMap[typeof(M)].Select(columnPair => $"{tableName}.{columnPair.Value}"));
+            string selectColumns = GetSelectColumns(typeof(M), selectParameters);
 
             // Transforms the order by properties list into an order by columns list
             IEnumerable<string> orderByColumns = null;
@@ -480,6 +487,31 @@ namespace Logic.Services
             {
                 return await db.QueryAsync<M>(procedureName, parameters, commandType: CommandType.StoredProcedure);
             }
+        }
+
+        #endregion
+
+        #region Private functions
+
+        /// <summary>
+        /// Gets SELECT columns based on given model and specified parameters (if any).
+        /// </summary>
+        /// <param name="modelType">Type of model that select columns are being produced for.</param>
+        /// <param name="selectParameters">List of model parameters (if any) that would be mapped to their corresponding database column
+        /// names and used to select specific SELECT columns.</param>
+        /// <returns>String containing select columns (or * if nothing is specified).</returns>
+        private string GetSelectColumns(Type modelType, IEnumerable<string> selectParameters = null)
+        {
+            string selectColumns = "*";
+            if (selectParameters != null)
+            {
+                string tableName = tableMap[modelType];
+                HashSet<string> selectParamSet = selectParameters?.Select(p => p.Capitalize())?.ToHashSet() ?? new HashSet<string>();
+                var usedMappings = propertyToColumnMap[modelType]
+                    .Where(pair => selectParamSet.Count == 0 || selectParamSet.Contains(pair.Key.Capitalize()));
+                selectColumns = string.Join(", ", usedMappings.Select(columnPair => $"{tableName}.{columnPair.Value}"));
+            }
+            return selectColumns;
         }
 
         #endregion

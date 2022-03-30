@@ -10,7 +10,6 @@ namespace Application
         {
             // Web API configuration and services
             config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
-            config.Filters.Add(new AuthorizeAttribute());
             config.Formatters.JsonFormatter.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
 
             // Web API routes

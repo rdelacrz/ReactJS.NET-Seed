@@ -1,37 +1,28 @@
 import axios from 'axios';
 import env from 'environment';
-import { request, RequestDocument } from 'graphql-request';
+import { GraphQLClient, RequestDocument } from 'graphql-request';
 
-class HttpSetup {
-  readonly baseHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-  };
+// If authentication exists in application, have this retrieve actual token
+const authToken: string = null;
 
-  get authToken(): string {
-    return null;    // If authentication exists in application, have this retrieve actual token
-  }
-
-  private createHttpClient() {
-    // Adds authorization token, if currently available
-    const headers = { ...this.baseHeaders };
-    if (this.authToken) {
-      headers['Authorization'] = `Bearer ${this.authToken}`;
-    }
-
-    return axios.create({
-      baseURL: env.apiPath,
-      headers,
-    });
-  }
-
-  get client() {
-    return this.createHttpClient();
-  }
+// Sets up headers
+const headers = {
+  'Accept': 'application/json',
+  'Content-Type': 'application/json',
+};
+if (authToken) {
+  headers['Authorization'] = `Bearer ${authToken}`;
 }
 
-export const http = new HttpSetup();
+export const http = axios.create({
+  baseURL: env.apiPath,
+  headers,
+});
 
-export const gqlRequest = async <T, V>(query: RequestDocument, variables?: V) => (
-  request<T, V>(env.apiPath, query, variables)
-)
+const graphQLClient = new GraphQLClient(
+  env.apiPath + '/graphql',
+  { headers });
+
+export const gqlRequest = async <T, V>(query: RequestDocument, variables?: V) => {
+  graphQLClient.request<T, V>(query, variables)
+};

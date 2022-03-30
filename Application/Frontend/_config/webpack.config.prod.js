@@ -2,6 +2,7 @@ const path = require('path');
 const { ESBuildMinifyPlugin } = require('esbuild-loader');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 const paths = require('./paths');
 
@@ -15,6 +16,7 @@ module.exports = (env, argv) => {
     return {
         entry: path.resolve(paths.SRC_DIR, 'index.js'),
         plugins: [
+            new NodePolyfillPlugin(),
             new MiniCssExtractPlugin({
                 filename: '[name].css',
             }),

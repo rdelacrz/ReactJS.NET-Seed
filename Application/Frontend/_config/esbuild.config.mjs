@@ -14,7 +14,7 @@ const mixinsSCSS = readFileSync(paths.STYLES_MIXINS_FILE, 'utf-8');
 
 // Defines dev server constants that can be adjusted as needed
 const DEV_PORT = 3000;
-const DEV_SERVER_ENDPOINT = 'https://localhost:44388';
+const DEV_SERVER_ENDPOINT = 'http://localhost:50486';
 
 // Ensures that dist folder exists and moves HTML index file to it
 if (!existsSync(paths.DIST_DIR)) {
@@ -83,8 +83,10 @@ esbuild.serve({ servedir: paths.DIST_DIR }, {}).then(({ host, port }) => {
                 secure: false,
                 changeOrigin: true,
             }, (err, proxyRes) => {
-                res.writeHead(proxyRes.statusCode, proxyRes.headers);
-                proxyRes.pipe(res, { end: true });
+                if (proxyRes.statusCode) {
+                    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+                    proxyRes.pipe(res, { end: true });
+                }
             });
         }
 

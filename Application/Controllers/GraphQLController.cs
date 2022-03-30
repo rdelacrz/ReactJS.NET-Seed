@@ -2,7 +2,9 @@
 using GraphQL.NewtonsoftJson;
 using GraphQL.Types;
 using GraphQL.Validation.Complexity;
+using Logic.Services;
 using Newtonsoft.Json.Linq;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -16,12 +18,14 @@ namespace GraphQL.GraphiQL.Controllers
         private readonly ISchema _schema;
         private readonly IDocumentExecuter _executer;
         private readonly IDocumentWriter _writer;
+        private readonly IServiceProvider _provider;
 
-        public GraphQLController(IDocumentExecuter executer, IDocumentWriter writer, ISchema schema)
+        public GraphQLController(IDocumentExecuter executer, IDocumentWriter writer, ISchema schema, IServiceProvider provider)
         {
             _executer = executer;
             _writer = writer;
             _schema = schema;
+            _provider = provider;
         }
 
         [HttpPost]
@@ -36,6 +40,7 @@ namespace GraphQL.GraphiQL.Controllers
                 _.Query = queryToExecute;
                 _.OperationName = query.OperationName;
                 _.Inputs = inputs;
+                _.RequestServices = _provider;
 
                 _.ComplexityConfiguration = new ComplexityConfiguration { MaxDepth = 15 };
 

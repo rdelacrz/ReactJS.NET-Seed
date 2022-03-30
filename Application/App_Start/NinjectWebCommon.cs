@@ -69,7 +69,15 @@ namespace Application
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
+            // Binds internal services
             kernel.Bind<IDatabaseService>().To<DatabaseService>();
+            kernel.Bind<IConfigService>().To<ConfigService>();
+
+            // Binds kernel itself to IServiceProvider
+            kernel.Bind<IServiceProvider>().ToConstant(kernel).InTransientScope();
+
+            // Binds GraphQL instances
+            GraphQLConfig.RegisterGraphQLInstances(kernel);
         }
     }
 }

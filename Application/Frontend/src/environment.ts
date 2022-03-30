@@ -1,6 +1,6 @@
 const isBrowser = typeof window !== 'undefined';
 const isDev = process.env.NODE_ENV === 'development';
-const appPath = process.env.APP_PATH;
+const appPath = process.env.APP_PATH || '';
 
 const getBuildStatus = () => {
   if (isBrowser) {
@@ -16,10 +16,12 @@ const getBuildStatus = () => {
 const environment = {
   originalAppPath: appPath,
   appPath: appPath ? appPath + '/#/' : '/',   // Simulates hash browser URL while keeping browser history benefits
-  apiPath: isBrowser ? window.location.origin + appPath + '/api/' : '/api/',
+  apiPath: isBrowser ? window.location.origin + appPath + '/api' : '/api',
   buildStatus: getBuildStatus(),
   isDev,
   isBrowser,
 };
+
+console.log(environment)
 
 export default environment;

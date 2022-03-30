@@ -147,20 +147,27 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Exceptions.cs" />
+    <Compile Include="GraphQLSchema\Queries\OptionsGroupGraphType.cs" />
+    <Compile Include="GraphQLSchema\Query.cs" />
+    <Compile Include="GraphQLSchema\GraphQLSchema.cs" />
     <Compile Include="Helpers\ConversionHelper.cs" />
     <Compile Include="Helpers\EmailManager.cs" />
     <Compile Include="Helpers\SQLGenerator.cs" />
+    <Compile Include="Models\Lookup.cs" />
     <Compile Include="Models\_IModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Config\ConfigService.cs" />
+    <Compile Include="Services\Config\IConfigService.cs" />
     <Compile Include="Services\Database\DatabaseService.cs" />
     <Compile Include="Services\Database\IDatabaseService.cs" />
+    <Compile Include="ViewModels\OptionValueSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <Folder Include="GraphQLSchema\Mutations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

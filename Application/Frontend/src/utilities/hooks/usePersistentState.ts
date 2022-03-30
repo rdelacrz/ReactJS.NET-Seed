@@ -14,7 +14,8 @@ const getStorageData = <T extends any>(key: StateType) => {
 export const usePersistentState = <T>(key: StateType) => {
   const queryClient = useQueryClient();
 
-  const { data } = useQuery(`sessionStorage_${key}`, () => getStorageData<T>(key));
+  const queryKey = `sessionStorage_${key}`;
+  const { data } = useQuery(queryKey, () => getStorageData<T>(key));
 
   const { mutateAsync: setData } = useMutation(
     async (value: T) => {
@@ -26,11 +27,11 @@ export const usePersistentState = <T>(key: StateType) => {
     {
       onMutate: (mutatedData) => {
         const current = data;
-        queryClient.setQueryData(key, mutatedData);
+        queryClient.setQueryData(queryKey, mutatedData);
         return current;
       },
       onError: (_, __, rollback) => {
-        queryClient.setQueryData(key, rollback);
+        queryClient.setQueryData(queryKey, rollback);
       },
     }
   );

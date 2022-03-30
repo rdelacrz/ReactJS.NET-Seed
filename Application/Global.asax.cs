@@ -19,7 +19,8 @@ namespace Application
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             JsEngineSwitcherConfig.Configure(JsEngineSwitcher.Current);
 
-            // Registers exception filter for validations
+            // Registers global filters and exception filter for validations
+            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             GlobalConfiguration.Configuration.Filters.Add(new ApiExceptionFilterAttribute());
         }
     }

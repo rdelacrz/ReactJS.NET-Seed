@@ -111,30 +111,31 @@ namespace Logic.Helpers
         private static string GenerateOrderBySQL(IEnumerable<string> orderBy, IEnumerable<bool> orderByASC = null)
         {
             var orderByASCStrs = orderByASC == null 
-                ? orderBy.Select(_ => "ASC").ToList() 
-                : orderByASC.Select(asc => asc ? "ASC" : "DESC").ToList();
-            return "ORDER BY " + string.Join(",", orderBy.Select((e, i) => e + orderByASCStrs[i]));
+                ? orderBy.Select(_ => " ASC").ToList() 
+                : orderByASC.Select(asc => asc ? " ASC" : " DESC").ToList();
+            return "ORDER BY " + string.Join(",", orderBy.Select((o, i) => o + orderByASCStrs[i]));
         }
 
         #endregion
 
         /// <summary>Generates a "get-all" SQL query based on the given table.</summary>
         /// <param name="table">Name of database table.</param>
+        /// <param name="selectParam">Parameters used for select statement (uses * by default)</param>
         /// <param name="joinSQL">SQL string containing JOIN clauses, if any (null by default).</param>
         /// <param name="orderBy">Column names to order a query's results by, in list order.</param>
         /// <param name="orderByASC">List of boolean values corresponding to each orderBy value. 
         /// True if ORDER BY ascending, false if ORDER BY descending (will be true by default if nothing is provided).</param>
         /// <returns>SQL for "get-all" query.</returns>
-        public static string GenerateGetAllSQL(string table, string joinSQL = null, IEnumerable<string> orderBy = null,
+        public static string GenerateGetAllSQL(string table, string selectParam = "*", string joinSQL = null, IEnumerable<string> orderBy = null,
             IEnumerable<bool> orderByASC = null)
         {
             StringBuilder sql = new StringBuilder();
 
             // Applies the SQL string associated with JOINs
             if (joinSQL != null)
-                sql.Append(string.Format("SELECT * FROM {0} {1}", table, joinSQL));
+                sql.Append(string.Format("SELECT {0} FROM {1} {2}", selectParam, table, joinSQL));
             else
-                sql.Append(string.Format("SELECT * FROM {0}", table));
+                sql.Append(string.Format("SELECT {0} FROM {1}", selectParam, table));
 
             // Applies ORDER BY sql, if any
             if (orderBy != null)

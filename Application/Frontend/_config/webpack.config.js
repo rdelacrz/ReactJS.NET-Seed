@@ -123,7 +123,12 @@ const sharedConfig = (env, argv) => {
                 new TsconfigPathsPlugin({
                     configFile: paths.TSCONFIG_PATH,
                 }),
-            ]
+            ],
+            fallback: {
+                'fs': false,
+                'path': false,
+                'os': false,
+            },
         },
         plugins: [
             // Makes variables accessible in application
