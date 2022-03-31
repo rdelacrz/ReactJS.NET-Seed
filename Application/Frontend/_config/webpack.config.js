@@ -82,7 +82,8 @@ const sharedConfig = (env, argv) => {
                     options: {
                         name: '[name].[ext]',
                         outputPath: 'documents/'
-                    }
+                    },
+                    type: 'javascript/auto',
                 },
                 {
                     test: /\.(woff(2)?|ttf|otf|eot)(\?v=\d+\.\d+\.\d+)?$/,
@@ -90,7 +91,8 @@ const sharedConfig = (env, argv) => {
                     options: {
                         name: '[name].[ext]',
                         outputPath: 'fonts/'
-                    }
+                    },
+                    type: 'javascript/auto',
                 },
                 {
                     test: /\.svg$/,
@@ -103,7 +105,8 @@ const sharedConfig = (env, argv) => {
                                 outputPath: 'icons/'
                             },
                         }
-                    ]
+                    ],
+                    type: 'javascript/auto',
                 },
                 {
                     test: /\.(png|jpe?g|gif)$/,
@@ -111,7 +114,8 @@ const sharedConfig = (env, argv) => {
                     options: {
                         name: '[name].[ext]',
                         outputPath: 'images/'
-                    }
+                    },
+                    type: 'javascript/auto',
                 }
             ]
         },

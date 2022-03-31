@@ -331,7 +331,15 @@
     <Content Include="SwaggerExtensions\index.html" />
     <Content Include="SwaggerExtensions\onComplete.js" />
     <Content Include="Web.config" />
-    <Content Include="wwwroot\**" />
+    <Content Include="wwwroot\225.743b5578.js" />
+    <Content Include="wwwroot\225.743b5578.js.LICENSE.txt" />
+    <Content Include="wwwroot\asset-manifest.json" />
+    <Content Include="wwwroot\interval.timeout.shim.js" />
+    <Content Include="wwwroot\main.bb0bd500.js" />
+    <Content Include="wwwroot\main.css" />
+    <Content Include="wwwroot\runtime.8bcb5955.js" />
+    <Content Include="wwwroot\vendor.1d8dd1e2.js" />
+    <Content Include="wwwroot\vendor.1d8dd1e2.js.LICENSE.txt" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

@@ -1,6 +1,7 @@
-import { UseMutateAsyncFunction, useMutation, useQuery, useQueryClient } from 'react-query';
+import { UseMutateAsyncFunction, useQueryClient } from 'react-query';
 import env from '~~/environment';
 import { initialState, StateType } from '~~/models';
+import { useMutation, useQuery } from '~~/utilities';
 
 const getStorageData = <T extends any>(key: StateType) => {
   let parsedData = initialState[key];
@@ -15,9 +16,12 @@ export const usePersistentState = <T>(key: StateType) => {
   const queryClient = useQueryClient();
 
   const queryKey = `sessionStorage_${key}`;
+  const mutationKey = `sessionStorage_${key}_mutation`;
+
   const { data } = useQuery(queryKey, () => getStorageData<T>(key));
 
   const { mutateAsync: setData } = useMutation(
+    mutationKey,
     async (value: T) => {
       if (env.isBrowser) {
         sessionStorage.setItem(key, JSON.stringify(value));

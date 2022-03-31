@@ -20,8 +20,7 @@ const environment = {
   buildStatus: getBuildStatus(),
   isDev,
   isBrowser,
+  isServer: !isBrowser,
 };
-
-console.log(environment)
 
 export default environment;

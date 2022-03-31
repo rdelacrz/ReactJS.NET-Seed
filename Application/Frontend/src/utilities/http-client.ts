@@ -23,6 +23,6 @@ const graphQLClient = new GraphQLClient(
   env.apiPath + '/graphql',
   { headers });
 
-export const gqlRequest = async <T, V>(query: RequestDocument, variables?: V) => {
+export const gqlRequest = async <T, V>(query: RequestDocument, variables?: V) => (
   graphQLClient.request<T, V>(query, variables)
-};
+);
