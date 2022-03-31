@@ -15,7 +15,7 @@ interface AppAndRoutingProps {
 
 const Routing: FunctionComponent<AppAndRoutingProps> = (props) => (
   env.isBrowser ? (
-    <BrowserRouter>
+    <BrowserRouter basename={env.appPath}>
       <AppRoutes />
     </BrowserRouter>
   ) : (
