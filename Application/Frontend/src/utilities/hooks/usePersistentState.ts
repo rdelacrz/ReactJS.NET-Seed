@@ -1,7 +1,6 @@
-import { UseMutateAsyncFunction, useQueryClient } from 'react-query';
-import env from '~~/environment';
-import { initialState, StateType } from '~~/models';
-import { useMutation, useQuery } from '~~/utilities';
+import { useMutation, useQuery, UseMutateAsyncFunction, useQueryClient } from 'react-query';
+import env from '~/environment';
+import { initialState, StateType } from '~/models';
 
 const getStorageData = <T extends any>(key: StateType) => {
   let parsedData = initialState[key];

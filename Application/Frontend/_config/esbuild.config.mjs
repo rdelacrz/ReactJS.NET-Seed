@@ -1,13 +1,16 @@
 import autoprefixer from 'autoprefixer';
 import { spawn } from 'child_process';
-import esbuild from 'esbuild';
-import envPlugin from '@chialab/esbuild-plugin-env';
-import { sassPlugin } from 'esbuild-sass-plugin';
 import { copyFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 import http from 'http';
 import httpProxy from 'http-proxy';
 import postcss from 'postcss';
 import paths from './paths.js';
+
+// Plugins
+import esbuild from 'esbuild';
+import svgrPlugin from 'esbuild-plugin-svgr';
+import envPlugin from '@chialab/esbuild-plugin-env';
+import { sassPlugin } from 'esbuild-sass-plugin';
 
 const globalVarsSCSS = readFileSync(paths.STYLES_GLOBAL_VARS_FILE, 'utf-8');
 const mixinsSCSS = readFileSync(paths.STYLES_MIXINS_FILE, 'utf-8');
@@ -40,6 +43,22 @@ esbuild.build({
         },
     },
     plugins: [
+        svgrPlugin({
+            // Needs to be set up like this to be compatible with svgr webpack export 
+            template: (variables, { tpl }) => {
+                return tpl`
+                    ${variables.imports};
+                    ${variables.interfaces};
+                    const ${variables.componentName} = (${variables.props}) => (
+                        ${variables.jsx}
+                    );
+                    
+                    ${variables.exports}
+
+                    export { ${variables.componentName} as ReactComponent };
+                ;`;
+            }
+        }),
         envPlugin(),
         sassPlugin({
             precompile(source, pathname) {
@@ -56,6 +75,11 @@ esbuild.build({
             },
         }),
     ],
+    loader: {
+        '.png': 'dataurl',
+        '.jpg': 'dataurl',
+        '.gif': 'dataurl',
+    },
 }).catch(() => process.exit(1));
 
 ///////////////////////////////////////////////////////////////// 

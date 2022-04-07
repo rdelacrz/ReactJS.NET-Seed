@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from 'react';
-import env from '~~/environment';
+import env from '~/environment';
 
 export const useWindowSize = () => {
   const [size, setSize] = useState([0, 0]);

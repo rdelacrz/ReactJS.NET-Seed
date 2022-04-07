@@ -1,5 +1,5 @@
 import { gql } from 'graphql-request';
-import { gqlRequest } from '~~/utilities';
+import { gqlRequest } from '~/utilities';
 
 export const configService = {
   getLookupData: (fieldName: string, activeOnly = true) => gqlRequest(

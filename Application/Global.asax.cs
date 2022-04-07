@@ -22,6 +22,9 @@ namespace Application
             // Registers global filters and exception filter for validations
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             GlobalConfiguration.Configuration.Filters.Add(new ApiExceptionFilterAttribute());
+
+            // Sets up dependency injection via Autofac
+            DependencyInjectionConfig.SetupDependencyInjection();
         }
     }
 }

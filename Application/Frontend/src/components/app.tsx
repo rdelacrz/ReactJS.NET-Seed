@@ -1,11 +1,11 @@
-import '~~/polyfills';
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { dehydrate, Hydrate, QueryClient, QueryClientProvider } from 'react-query';
+import '~/polyfills';
+import React, { FunctionComponent, useState } from 'react';
+import { Hydrate, QueryClient, QueryClientConfig, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools'
 import { BrowserRouter } from 'react-router-dom';
 import { StaticRouter } from 'react-router-dom/server';
-import env from '~~/environment';
-import AppRoutes from '~~/routes';
+import env from '~/environment';
+import AppRoutes from '~/routes';
 
 import './app.scss';
 
@@ -25,38 +25,50 @@ const Routing: FunctionComponent<AppAndRoutingProps> = (props) => (
   )
 )
 
-const QueryClientContainer: FunctionComponent<AppAndRoutingProps> = (props) => {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 10000,
-      },
+export const queryClientOptions: QueryClientConfig = {
+  defaultOptions: {
+    queries: {
+      staleTime: 10000,
     },
-  }));
-
-  const dehydratedState = env.isBrowser
-    ? window['__REACT_QUERY_STATE__']
-    : dehydrate(queryClient);
-
-  // Clears the React Query cache on the server after render, after dehydrated state has been sent
-  useEffect(() => {
-    if (env.isServer) {
-      queryClient.clear();
-    }
-  });
-
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Hydrate state={dehydratedState}>
-        <Routing location={props.location} />
-      </Hydrate>
-      <ReactQueryDevtools />
-    </QueryClientProvider>
-  );
+  },
 }
 
-const App: FunctionComponent<AppAndRoutingProps> = (props) => (
-  <QueryClientContainer location={props.location} />
-);
+const QueryClientContainer: FunctionComponent<{}> = ({ children }) => {
+  const [queryClient] = useState(() => new QueryClient(queryClientOptions));
+  const [dehydratedState, setDehydratedState] = useState(() => env.isBrowser ? window['__REACT_QUERY_STATE__'] : undefined);
 
-export default App;
+  if (env.isDev) {
+    // Dev environment does not require hydration
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+        <ReactQueryDevtools />
+      </QueryClientProvider>
+    );
+  } else if (env.isBrowser) {
+    // Unable to retrieve window state prerendered by server without setTimeout
+    setTimeout(() => {
+      if (!dehydratedState) {
+        setDehydratedState(window['__REACT_QUERY_STATE__']);
+      }
+    }, 0);
+
+    // Client environment will get dehydrated state from __REACT_QUERY_STATE__, which is prerendered by server
+    return (
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={dehydratedState}>
+          {children}
+        </Hydrate>
+      </QueryClientProvider>
+    );
+  } else {
+    // Server environment's QueryClientProvider will be rendered on ReactJS.NET side
+    return <>{children}</>;
+  }
+}
+
+export const App: FunctionComponent<AppAndRoutingProps> = (props) => (
+  <QueryClientContainer>
+    <Routing location={props.location} />
+  </QueryClientContainer>
+);

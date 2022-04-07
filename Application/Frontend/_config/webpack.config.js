@@ -1,13 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const { merge } = require('webpack-merge');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const paths = require('./paths');
 
-const sharedConfig = (env, argv) => {
+const sharedConfig = (env, argv, ssr) => {
     const isDev = argv.mode === 'development';
     return {
         mode: argv.mode,
@@ -78,21 +77,17 @@ const sharedConfig = (env, argv) => {
                 },
                 {
                     test: /\.(pdf|zip|xlsx?)$/,
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'documents/'
+                    type: 'asset/resource',
+                    generator : {
+                      filename : 'documents/[name][ext]',
                     },
-                    type: 'javascript/auto',
                 },
                 {
                     test: /\.(woff(2)?|ttf|otf|eot)(\?v=\d+\.\d+\.\d+)?$/,
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'fonts/'
+                    type: 'asset/resource',
+                    generator : {
+                      filename : 'fonts/[name][ext]',
                     },
-                    type: 'javascript/auto',
                 },
                 {
                     test: /\.svg$/,
@@ -110,12 +105,10 @@ const sharedConfig = (env, argv) => {
                 },
                 {
                     test: /\.(png|jpe?g|gif)$/,
-                    loader: 'file-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: 'images/'
+                    type: 'asset/resource',
+                    generator : {
+                      filename : 'images/[name][ext]',
                     },
-                    type: 'javascript/auto',
                 }
             ]
         },
@@ -129,9 +122,14 @@ const sharedConfig = (env, argv) => {
                 }),
             ],
             fallback: {
+                'buffer': require.resolve('buffer'),
                 'fs': false,
                 'path': false,
                 'os': false,
+                'http': require.resolve('stream-http'),
+                'https': require.resolve('https-browserify'),
+                'stream': require.resolve('stream-browserify'),
+                'zlib': require.resolve('browserify-zlib')
             },
         },
         plugins: [
@@ -140,10 +138,11 @@ const sharedConfig = (env, argv) => {
                 'process.env' : {
                     APP_PATH: JSON.stringify(env ? env.APP_PATH : ''),
                     IS_DEV: JSON.stringify(isDev ? 'true' : 'false'),
+                    SSR: JSON.stringify(ssr ? 'true' : 'false'),
                 },
-                SC_DISABLE_SPEEDY: true,
+                SC_DISABLE_SPEEDY: true,    // For styled components in production
             }),
-            new CleanWebpackPlugin(),
+            new MiniCssExtractPlugin(),
         ],
         output: {
             filename: '[name].bundle.js',
@@ -152,6 +151,10 @@ const sharedConfig = (env, argv) => {
 }
 
 module.exports = (env, argv) => {
-    const config = argv.mode === 'development' ? require('./webpack.config.dev') : require('./webpack.config.prod');
-    return merge(sharedConfig(env, argv), config(env, argv));
+    const clientConfig = require('./webpack.config.client');
+    const serverConfig = require('./webpack.config.server');
+    return [
+        merge(sharedConfig(env, argv, false), clientConfig(env, argv)),
+        merge(sharedConfig(env, argv, true), serverConfig(env, argv)),
+    ];
 }

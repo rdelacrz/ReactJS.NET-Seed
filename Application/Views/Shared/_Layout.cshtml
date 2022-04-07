@@ -1,23 +1,32 @@
-﻿<!DOCTYPE html>
+﻿@using Application.Helpers;
+@using React.RenderFunctions;
+
+@{
+    QueryClientRenderer queryClientRenderer = new QueryClientRenderer();
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Seed Project</title>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="~/wwwroot/favicon.ico" type="image/vnd.microsoft.icon">
-    @Html.ReactGetStylePaths()
+    @Html.Raw(ViewBag.styles)
 </head>
 <body>
     @RenderBody()
 
     <!-- Render the component server-side, passing initial props -->
-    @Html.React("Components.App", new { location = @HttpContext.Current.Request.RawUrl })
+    @Html.React("Components.App",
+        new { location = @HttpContext.Current.Request.RawUrl },
+        renderFunctions: new ChainedRenderFunctions(queryClientRenderer))
 
     <!-- Render the code to initialise the component -->
-    @Html.ReactGetScriptPaths()
+    @Html.Raw(ViewBag.scripts)
     @Html.ReactInitJavaScript()
 
     <script>
-        window.__REACT_QUERY_STATE__ = {}
+        @Html.Raw("window.__REACT_QUERY_STATE__ = " + queryClientRenderer.DehydratedState)
     </script>
 </body>
 </html>

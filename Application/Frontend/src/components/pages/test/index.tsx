@@ -4,7 +4,7 @@ import './styles.scss';
 
 export const TestPage: FunctionComponent<{}> = () => {
   return (
-    <div>Test page</div>
+    <div className='test-page-wrapper'>Test page</div>
   );
 }
 

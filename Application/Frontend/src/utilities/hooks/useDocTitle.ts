@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import env from '~~/environment';
+import env from '~/environment';
 
 export const useDocTitle = (docTitle: string) => {
   useEffect(() => {

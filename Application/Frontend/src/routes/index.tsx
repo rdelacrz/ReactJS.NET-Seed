@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { HomePage } from '~~/components/pages/home';
-import { TestPage } from '~~/components/pages/test';
+import { HomePage } from '~/components/pages/home';
+import { TestPage } from '~/components/pages/test';
 
 const AppRoutes: FunctionComponent<{}> = () => (
   <Routes>

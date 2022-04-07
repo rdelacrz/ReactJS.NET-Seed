@@ -23,7 +23,7 @@ namespace Application
 			ReactSiteConfiguration.Configuration
 				.SetLoadBabel(false)
 				.SetLoadReact(false)
-				.SetReactAppBuildPath("~/wwwroot");
+				.AddScriptWithoutTransform("~/wwwroot/server.js");
 		}
 	}
 }
