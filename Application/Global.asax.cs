@@ -7,7 +7,7 @@ using Application.Filters;
 
 namespace Application
 {
-    public class WebApiApplication : HttpApplication
+    public class MainApplication : HttpApplication
     {
         protected void Application_Start()
         {

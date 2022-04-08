@@ -1,5 +1,7 @@
-﻿using Autofac;
+﻿using Application.Helpers;
+using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Integration.Mvc;
 using Autofac.Integration.WebApi;
 using GraphQL;
 using GraphQL.NewtonsoftJson;
@@ -14,6 +16,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using System.Web.Mvc;
 
 namespace Application
 {
@@ -22,22 +25,29 @@ namespace Application
         public static void SetupDependencyInjection()
         {
             var builder = new ContainerBuilder();
-            var config = GlobalConfiguration.Configuration;
 
             // Registers Web API controllers
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
+            // Registers MVC controllers
+            builder.RegisterControllers(typeof(MainApplication).Assembly);
+
+            // Enables property injection in view pages
+            builder.RegisterSource(new ViewRegistrationSource());
 
             // Internally registers service provider and ties it to IServiceProvider
             builder.Populate(Enumerable.Empty<ServiceDescriptor>());
 
             // Registers injectable services
             RegisterServices(builder);
+            RegisterReactRenderingFunctions(builder);
             RegisterGraphQLInstances(builder);
             RegisterGraphQLSchema(builder);
 
             // Set the dependency resolver to be Autofac
             var container = builder.Build();
-            config.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            GlobalConfiguration.Configuration.DependencyResolver = new AutofacWebApiDependencyResolver(container);
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
 
         private static void RegisterServices(ContainerBuilder builder)
@@ -45,6 +55,11 @@ namespace Application
             // Binds internal services
             builder.RegisterType<DatabaseService>().As<IDatabaseService>();
             builder.RegisterType<ConfigService>().As<IConfigService>();
+        }
+
+        private static void RegisterReactRenderingFunctions(ContainerBuilder builder)
+        {
+            builder.RegisterType<QueryClientRenderer>().AsSelf().InstancePerRequest();
         }
 
         private static void RegisterGraphQLInstances(ContainerBuilder builder)

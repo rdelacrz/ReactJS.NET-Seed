@@ -19,7 +19,7 @@ export const HomePage: FunctionComponent<{}> = () => {
   }, [])
   return (
     <div>
-      Home Page, SessionStore Auth Token: {'authToken'} <UserIcon />
+      Home Page, SessionStore Auth Token: {authToken} <UserIcon />
       <img src={testImg} alt='Test Image' />
     </div>
   );

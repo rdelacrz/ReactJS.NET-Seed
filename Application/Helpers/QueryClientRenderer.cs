@@ -15,15 +15,24 @@ namespace Application.Helpers
             public List<string> Entrypoints { get; set; }
         }
 
-        public string DehydratedState { get; private set; } = "";
+        public Dictionary<string, object> PrerenderedData { get; set; } = new Dictionary<string, object>();
+
+        public string DehydratedState { get; private set; } = "{}";
 
         public override void PreRender(Func<string, string> executeJs)
         {
             executeJs("var queryClient = new QueryClient(queryClientOptions);");
-            // executeJs("await queryClient.prefetchQuery('key', fn);");
+
+            // Gets data prerendered from the server side and sets it here (queryClient.prefetchQuery doesn't seem to work)
+            foreach (var dataPair in PrerenderedData)
+            {
+                var queryData = JsonConvert.SerializeObject(dataPair.Value);
+                executeJs($"queryClient.setQueryData('{dataPair.Key}', {queryData})");
+            }
+
             executeJs("var dehydratedState = dehydrate(queryClient);");
 
-            DehydratedState = executeJs("JSON.stringify(dehydratedState)");
+            DehydratedState = executeJs("JSON.stringify(dehydratedState);");
         }
 
         public override string WrapComponent(string componentToRender)

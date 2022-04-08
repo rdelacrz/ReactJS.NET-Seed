@@ -25,6 +25,12 @@ if (!existsSync(paths.DIST_DIR)) {
 }
 copyFileSync(paths.DEV_SRC_HTML_FILE, paths.DEV_DIST_HTML_FILE);
 
+// Loads file types
+const loaderMapper = (loaderList, loaderType) => loaderList.reduce(
+    (map, loader) => {
+        map[loader] = loaderType;
+        return map;
+    }, {});
 
 ///////////////////////////////////////////////////////////////// 
 //  Builds initial application for the dev environment
@@ -76,9 +82,11 @@ esbuild.build({
         }),
     ],
     loader: {
-        '.png': 'dataurl',
-        '.jpg': 'dataurl',
-        '.gif': 'dataurl',
+        ...loaderMapper([
+            '.png', '.jpg', '.gif',                     // Images
+            '.woff', '.woff2', '.ttf', '.otf', '.eot'   // Fonts
+        ], 'dataurl'),
+        ...loaderMapper(['.pdf', '.zip', '.xls', '.xlsx'], 'file'),
     },
 }).catch(() => process.exit(1));
 
