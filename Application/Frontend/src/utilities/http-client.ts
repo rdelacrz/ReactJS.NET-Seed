@@ -1,6 +1,5 @@
 import axios from 'axios';
 import env from 'environment';
-import { GraphQLClient, RequestDocument } from 'graphql-request';
 
 // If authentication exists in application, have this retrieve actual token
 const authToken: string = null;
@@ -19,10 +18,12 @@ export const http = axios.create({
   headers,
 });
 
-const graphQLClient = new GraphQLClient(
-  env.apiPath + '/graphql',
-  { headers });
+type GraphQLResponse<T> = {
+  data: T;
+};
 
-export const gqlRequest = async <T, V>(query: RequestDocument, variables?: V) => (
-  graphQLClient.request<T, V>(query, variables)
-);
+export const gqlRequest = async <T>(query: string, variables?: { [id: string]: any }) => {
+  const gqlBody = JSON.stringify({ query, variables });
+  const resp = await http.post<GraphQLResponse<T>>(env.apiPath + '/graphql', gqlBody);
+  return resp.data.data;
+}

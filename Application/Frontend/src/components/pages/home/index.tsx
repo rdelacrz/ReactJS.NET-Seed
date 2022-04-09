@@ -9,18 +9,27 @@ import './styles.scss';
 
 export const HomePage: FunctionComponent<{}> = () => {
   const [authToken, setAuthToken] = usePersistentState<string>('authToken');
-  const { data: options, isFetched } = useQuery('options', () => configService.getLookupData('agencyType'));
+  const { data, isFetched } = useQuery('options', () => configService.getLookupData('agencyType'));
 
   const testImg = require('~/assets/graphics/public-docs-img.png');
 
-  console.log('getLookupData', options)
   useEffect(() => {
     setAuthToken('testAuth');
   }, [])
+  
   return (
     <div>
       Home Page, SessionStore Auth Token: {authToken} <UserIcon />
       <img src={testImg} alt='Test Image' />
+      {data && data['options'] && data['options']['lookups'] && (
+        <div className='lookup-wrapper'>
+          {data['options']['lookups'].map(lookup => (
+            <div style={{'color': 'red'}} key={lookup.valueCode}>
+              {lookup.valueName}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
