@@ -49,7 +49,7 @@ const QueryClientContainer: FunctionComponent<{}> = ({ children }) => {
     // Unable to retrieve window state prerendered by server without setTimeout
     setTimeout(() => {
       if (!dehydratedState) {
-        // setDehydratedState(window['__REACT_QUERY_STATE__']);
+        setDehydratedState(window['__REACT_QUERY_STATE__']);
       }
     }, 0);
 
